@@ -1,8 +1,8 @@
 package test
 
 import (
+	db "BankApp/db/sqlc"
 	"database/sql"
-	db "defaultProjectStructure_sqlc/db/sqlc"
 	_ "github.com/lib/pq"
 	"log"
 	"os"
@@ -17,6 +17,9 @@ const (
 
 var testQueries *db.Queries
 var testDB *sql.DB
+var repository *db.Repository
+
+//var accountRepository *account.AccountRepository
 
 func TestMain(m *testing.M) {
 	var err error
@@ -25,5 +28,6 @@ func TestMain(m *testing.M) {
 		log.Fatal("cannot connect to DB")
 	}
 	testQueries = db.New(testDB)
+	repository = db.NewRepository(testDB)
 	os.Exit(m.Run())
 }

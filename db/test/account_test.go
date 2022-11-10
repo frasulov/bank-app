@@ -1,10 +1,10 @@
 package test
 
 import (
+	db "BankApp/db/sqlc"
+	"BankApp/util"
 	"context"
 	"database/sql"
-	db "defaultProjectStructure_sqlc/db/sqlc"
-	"defaultProjectStructure_sqlc/util"
 	"github.com/stretchr/testify/require"
 	"testing"
 	"time"

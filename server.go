@@ -1,10 +1,11 @@
 package main
 
 import (
-	"defaultProjectStructure_sqlc/config"
-	_ "defaultProjectStructure_sqlc/docs"
-	"defaultProjectStructure_sqlc/middleware"
-	"defaultProjectStructure_sqlc/sample"
+	"BankApp/account"
+	"BankApp/config"
+	db "BankApp/db/sqlc"
+	_ "BankApp/docs"
+	"BankApp/middleware"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -55,10 +56,9 @@ func NewServer() (*fiber.App, error) {
 	v1 := app.Group("/api/v1")
 
 	// repos & services
-	//store := db.NewStore(connection)
-	sampleRepository := sample.NewSampleRepository(connection)
-	sampleService := sample.GetNewSampleService(sampleRepository)
-	sample.SampleRouter(v1, sampleService)
+	repository := db.NewRepository(connection)
+	accountService := account.GetNewAccountService(repository)
+	account.Router(v1, accountService)
 
 	v1.Get("/swagger/*", swagger.HandlerDefault)
 	return app, nil

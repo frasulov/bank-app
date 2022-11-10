@@ -9,3 +9,9 @@ sqlc:
 
 startapp:
 	go run server.go
+
+swagger:
+	swag init -g server.go
+
+test:
+	go test -v -cover ./...

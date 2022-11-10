@@ -51,7 +51,7 @@ my_errors.NewHttpError(fiber.StatusNotFound, my_errors.NewResponseByKey("not_fou
 * 'HttpError' support multi language also, you can add languages in errors/errorResponse.json file
 
 ### In Route
-* use Routing constraints (https://docs.gofiber.io/guide/routing)
+* use Routing constraints ([https://docs.gofiber.io/guide/routing](https://docs.gofiber.io/guide/routing))
 
 
 ### In Middleware

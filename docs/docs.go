@@ -25,7 +25,56 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/samples": {
+        "/accounts": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Get accounts",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page ID",
+                        "name": "page_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Bearer",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/account.AccountOutput"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "consumes": [
                     "application/json"
@@ -34,32 +83,25 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Sample"
+                    "Account"
                 ],
-                "summary": "Create a new sample.",
+                "summary": "Create a new account.",
                 "parameters": [
                     {
-                        "description": "Sample",
+                        "description": "account",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sample.SampleDto"
+                            "$ref": "#/definitions/account.CreateAccountInput"
                         }
-                    },
-                    {
-                        "type": "string",
-                        "description": "Bearer",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
                     }
                 ],
                 "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/sample.SampleDto"
+                            "$ref": "#/definitions/account.AccountOutput"
                         }
                     },
                     "400": {
@@ -71,7 +113,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/samples/{id}": {
+        "/accounts/{id}": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -80,13 +122,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Sample"
+                    "Account"
                 ],
-                "summary": "Gets a sample by ID.",
+                "summary": "Get a account by ID.",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Sample ID",
+                        "description": "Account ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -102,7 +144,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/sample.SampleDto"
+                            "$ref": "#/definitions/account.AccountOutput"
                         }
                     },
                     "400": {
@@ -116,6 +158,44 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "account.AccountOutput": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "integer"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "owner": {
+                    "type": "string"
+                }
+            }
+        },
+        "account.CreateAccountInput": {
+            "type": "object",
+            "required": [
+                "balance"
+            ],
+            "properties": {
+                "balance": {
+                    "type": "integer"
+                },
+                "currency": {
+                    "type": "string",
+                    "enum": [
+                        "AZN",
+                        "USD"
+                    ]
+                },
+                "owner": {
+                    "type": "string"
+                }
+            }
+        },
         "errors.Response": {
             "type": "object",
             "properties": {
@@ -123,17 +203,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "sample.SampleDto": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
                     "type": "string"
                 }
             }

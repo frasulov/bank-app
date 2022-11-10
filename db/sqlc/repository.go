@@ -6,20 +6,20 @@ import (
 	"fmt"
 )
 
-type Store struct {
+type Repository struct {
 	*Queries
 	db *sql.DB
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{
-		db:      db,
-		Queries: New(db),
+func NewRepository(conn *sql.DB) *Repository {
+	return &Repository{
+		db:      conn,
+		Queries: New(conn),
 	}
 }
 
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
-	tx, err := store.db.BeginTx(ctx, nil)
+func (r *Repository) execTx(ctx context.Context, fn func(*Queries) error) error {
+	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
@@ -48,9 +48,9 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
-func (store *Store) TransferTx(ctx context.Context, args TransferTxParams) (TransferTxResult, error) {
+func (r *Repository) TransferTx(ctx context.Context, args TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
-	err := store.execTx(ctx, func(q *Queries) error {
+	err := r.execTx(ctx, func(q *Queries) error {
 		var err error
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			FromAccountID: args.FromAccountId,
