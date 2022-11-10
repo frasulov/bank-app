@@ -1,0 +1,16 @@
+database:
+  host: localhost
+  port: 5433
+  dialect: postgres
+  user: postgres
+  dbname: postgres
+  password: postgres
+  gormMaxIdleConn: 20
+  gormMaxOpenConn: 300
+  gormMaxConnLifetimeHour: 1
+  sslmode: disable
+  schema: public.
+
+app:
+  host: localhost
+  port: 8080

@@ -1,0 +1,12 @@
+{
+  "not_found": {
+    "az": "Record tapilmadi",
+    "en": "Record not found",
+    "ru": "Record not found"
+  },
+  "data_not_valid": {
+    "az": "Data not valid",
+    "en": "Data not valid",
+    "ru": "Data not valid"
+  }
+}

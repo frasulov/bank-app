@@ -1,0 +1,16 @@
+database:
+  host: localhost
+  port: 5432
+  dialect: postgres
+  user: postgres
+  dbname: im-db
+  password: password
+  gormMaxIdleConn: 20
+  gormMaxOpenConn: 300
+  gormMaxConnLifetimeHour: 1
+  sslmode: disable
+  schema: im.
+
+app:
+  host: main-imd.technofusion.az
+  port: 8080

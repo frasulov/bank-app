@@ -1,0 +1,97 @@
+basePath: /api/v1
+definitions:
+  errors.Response:
+    properties:
+      key:
+        type: string
+      message:
+        type: string
+    type: object
+  sample.SampleDto:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+host: localhost:8001
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Sample App API
+  version: "2.0"
+paths:
+  /samples:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Sample
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/sample.SampleDto'
+      - description: Bearer
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/sample.SampleDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Response'
+      summary: Create a new sample.
+      tags:
+      - Sample
+  /samples/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Sample ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Bearer
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sample.SampleDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Response'
+      summary: Gets a sample by ID.
+      tags:
+      - Sample
+schemes:
+- http
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
