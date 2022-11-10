@@ -34,17 +34,73 @@ func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 	return tx.Commit()
 }
 
-/*
- * Delete below code. It is just example
- */
+type TransferTxParams struct {
+	FromAccountId int64 `json:"from_account_id"`
+	ToAccountId   int64 `json:"to_account_id"`
+	Amount        int64 `json:"ammount"`
+}
 
-func (store *Store) SampleTransferTx(ctx context.Context, args any) (any, error) {
+type TransferTxResult struct {
+	Transfer    Transfer `json:"transfer"`
+	FromAccount Account  `json:"from_account"`
+	ToAccount   Account  `json:"to_account"`
+	FromEntry   Entry    `json:"from_entry"`
+	ToEntry     Entry    `json:"to_entry"`
+}
+
+func (store *Store) TransferTx(ctx context.Context, args TransferTxParams) (TransferTxResult, error) {
+	var result TransferTxResult
 	err := store.execTx(ctx, func(q *Queries) error {
-		// call your repository functions here
-		// it is example generally we use insert/update in transactions
-		q.GetSampleById(ctx, 1)
-		q.GetSamples(ctx)
+		var err error
+		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
+			FromAccountID: args.FromAccountId,
+			ToAccountID:   args.ToAccountId,
+			Amount:        args.Amount,
+		})
+		if err != nil {
+			return err
+		}
+
+		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
+			AccountID: args.FromAccountId,
+			Amount:    -args.Amount,
+		})
+		if err != nil {
+			return err
+		}
+
+		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
+			AccountID: args.ToAccountId,
+			Amount:    args.Amount,
+		})
+		if err != nil {
+			return err
+		}
+
+		account1, err := q.GetAccountForUpdate(ctx, args.FromAccountId)
+		if err != nil {
+			return err
+		}
+		result.FromAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
+			account1.ID,
+			account1.Balance - args.Amount,
+		})
+		if err != nil {
+			return err
+		}
+
+		account2, err := q.GetAccountForUpdate(ctx, args.ToAccountId)
+		if err != nil {
+			return err
+		}
+		result.ToAccount, err = q.UpdateAccount(ctx, UpdateAccountParams{
+			account2.ID,
+			account2.Balance + args.Amount,
+		})
+		if err != nil {
+			return err
+		}
 		return nil
 	})
-	return nil, err
+	return result, err
 }
