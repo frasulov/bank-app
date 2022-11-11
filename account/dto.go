@@ -13,12 +13,12 @@ type AccountOutput struct {
 	Currency string `json:"currency"`
 }
 
-type listAccountParam struct {
+type ListAccountParam struct {
 	PageId   int32 `query:"page_id"`
 	PageSize int32 `query:"page_size"`
 }
 
-func (l *listAccountParam) setDefaults() {
+func (l *ListAccountParam) setDefaults() {
 	if l.PageSize == 0 {
 		l.PageSize = 5
 	}

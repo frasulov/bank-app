@@ -7,11 +7,11 @@ import (
 )
 
 type AccountController struct {
-	service   *AccountService
+	service   AccountService
 	validator *validator.Validate
 }
 
-func newAccountController(service *AccountService) AccountController {
+func NewAccountController(service AccountService) AccountController {
 	return AccountController{
 		service:   service,
 		validator: validator.New(),
@@ -52,7 +52,7 @@ func (ac AccountController) GetAccount(ctx *fiber.Ctx) error {
 // @Failure 400 {object} errors.Response
 // @Router /accounts [get]
 func (ac AccountController) ListAccounts(ctx *fiber.Ctx) error {
-	p := new(listAccountParam)
+	p := new(ListAccountParam)
 	if err := ctx.QueryParser(p); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(errors.NewResponseByKey("data_not_valid", "en"))
 	}

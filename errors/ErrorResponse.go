@@ -49,18 +49,15 @@ func NewResponseByKey(key, language string) *Response {
 }
 
 func readErrorFile() map[string]map[string]string {
-	byteValue, err := os.ReadFile("errors/errorResponse.json")
-
+	byteValue, err := os.ReadFile("/Users/faganrasulov/Desktop/BankApp/errors/errorResponse.json")
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	var result map[string]map[string]string
 	err = json.Unmarshal(byteValue, &result)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	return result
 }

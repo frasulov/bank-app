@@ -17,7 +17,7 @@ const (
 
 var testQueries *db.Queries
 var testDB *sql.DB
-var repository *db.Repository
+var repository db.Repository
 
 //var accountRepository *account.AccountRepository
 

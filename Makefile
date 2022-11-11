@@ -13,5 +13,11 @@ startapp:
 swagger:
 	swag init -g server.go
 
+mock:
+	mockgen --package mockdb --destination db/mock/repository.go BankApp/db/sqlc Repository
+
+mockservice:
+	mockgen --package mockdb --destination db/mock/account_service.go BankApp/account AccountService
+
 test:
 	go test -v -cover ./...

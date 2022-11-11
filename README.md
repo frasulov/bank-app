@@ -12,6 +12,10 @@
   * **startapp** - instead of ```go run server.go```
 
 
+### Test
+* go install github.com/golang/mock/mockgen@v1.6.0
+* mockgen --package mockdb --destination db/mock/repository.go BankApp/db/sqlc Repository
+
 ### References
 * Validations - https://github.com/go-playground/validator
 * Swagger - https://github.com/swaggo/swag

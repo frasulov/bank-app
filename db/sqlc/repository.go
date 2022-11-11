@@ -6,19 +6,24 @@ import (
 	"fmt"
 )
 
-type Repository struct {
+type Repository interface {
+	Querier
+	TransferTx(ctx context.Context, args TransferTxParams) (TransferTxResult, error)
+}
+
+type SQLRepository struct {
 	*Queries
 	db *sql.DB
 }
 
-func NewRepository(conn *sql.DB) *Repository {
-	return &Repository{
+func NewRepository(conn *sql.DB) Repository {
+	return SQLRepository{
 		db:      conn,
 		Queries: New(conn),
 	}
 }
 
-func (r *Repository) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (r *SQLRepository) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -48,7 +53,7 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
-func (r *Repository) TransferTx(ctx context.Context, args TransferTxParams) (TransferTxResult, error) {
+func (r SQLRepository) TransferTx(ctx context.Context, args TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 	err := r.execTx(ctx, func(q *Queries) error {
 		var err error
