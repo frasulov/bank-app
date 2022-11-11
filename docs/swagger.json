@@ -152,6 +152,45 @@
                     }
                 }
             }
+        },
+        "/transfer": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Transfer money between 2 accounts",
+                "parameters": [
+                    {
+                        "description": "transfer",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/account.TransferInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/db.TransferTxResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -175,21 +214,112 @@
         "account.CreateAccountInput": {
             "type": "object",
             "required": [
-                "balance"
+                "balance",
+                "currency"
             ],
             "properties": {
                 "balance": {
                     "type": "integer"
                 },
                 "currency": {
-                    "type": "string",
-                    "enum": [
-                        "AZN",
-                        "USD"
-                    ]
+                    "type": "string"
                 },
                 "owner": {
                     "type": "string"
+                }
+            }
+        },
+        "account.TransferInput": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "from_account_id": {
+                    "type": "integer"
+                },
+                "to_account_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "db.Account": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "currency": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "owner": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.Entry": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "db.Transfer": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "from_account_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "to_account_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "db.TransferTxResult": {
+            "type": "object",
+            "properties": {
+                "from_account": {
+                    "$ref": "#/definitions/db.Account"
+                },
+                "from_entry": {
+                    "$ref": "#/definitions/db.Entry"
+                },
+                "to_account": {
+                    "$ref": "#/definitions/db.Account"
+                },
+                "to_entry": {
+                    "$ref": "#/definitions/db.Entry"
+                },
+                "transfer": {
+                    "$ref": "#/definitions/db.Transfer"
                 }
             }
         },

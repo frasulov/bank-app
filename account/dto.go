@@ -3,7 +3,7 @@ package account
 type CreateAccountInput struct {
 	Owner    string `json:"owner"`
 	Balance  int64  `json:"balance" validate:"required"`
-	Currency string `json:"currency" validate:"oneof=AZN USD"`
+	Currency string `json:"currency" validate:"required,currency"`
 }
 
 type AccountOutput struct {
@@ -16,6 +16,13 @@ type AccountOutput struct {
 type ListAccountParam struct {
 	PageId   int32 `query:"page_id"`
 	PageSize int32 `query:"page_size"`
+}
+
+type TransferInput struct {
+	FromAccountId int64  `json:"from_account_id"`
+	ToAccountId   int64  `json:"to_account_id"`
+	Amount        int64  `json:"amount"`
+	Currency      string `json:"currency"validate:"currency"`
 }
 
 func (l *ListAccountParam) setDefaults() {

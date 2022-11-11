@@ -7,5 +7,6 @@ func Router(app fiber.Router, service *AccountServiceImpl) {
 	app.Get("/accounts/:id<int;min(0)>", controller.GetAccount)
 	app.Get("/accounts", controller.ListAccounts)
 	app.Post("/accounts", controller.CreateAccount)
+	app.Post("/transfer", controller.TransferMoney)
 	// other sample routes
 }

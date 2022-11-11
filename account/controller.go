@@ -12,9 +12,11 @@ type AccountController struct {
 }
 
 func NewAccountController(service AccountService) AccountController {
+	validate := validator.New()
+	_ = validate.RegisterValidation("currency", validateCurrency)
 	return AccountController{
 		service:   service,
-		validator: validator.New(),
+		validator: validate,
 	}
 }
 
@@ -88,4 +90,29 @@ func (ac AccountController) CreateAccount(ctx *fiber.Ctx) error {
 		return ctx.Status(err.(errors.HttpError).Code).JSON(err.(errors.HttpError).Response)
 	}
 	return ctx.Status(fiber.StatusCreated).JSON(account)
+}
+
+// TransferMoney
+// @Summary Transfer money between 2 accounts
+// @Tags Account
+// @Accept json
+// @Produce json
+// @Param input body TransferInput true "transfer"
+// @Success 200 {object} db.TransferTxResult
+// @Failure 400 {object} errors.Response
+// @Router /transfer [post]
+func (ac AccountController) TransferMoney(ctx *fiber.Ctx) error {
+	var input TransferInput
+	if err := ctx.BodyParser(&input); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(errors.NewResponseByKey("data_not_valid", "en"))
+	}
+	err := ac.validator.Struct(input)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(errors.NewResponseByKey("data_not_valid", "en"))
+	}
+	result, err := ac.service.TransferMoney(input)
+	if err != nil {
+		return ctx.Status(err.(errors.HttpError).Code).JSON(err.(errors.HttpError).Response)
+	}
+	return ctx.Status(fiber.StatusCreated).JSON(result)
 }

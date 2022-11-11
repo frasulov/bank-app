@@ -8,5 +8,10 @@
     "az": "Data not valid",
     "en": "Data not valid",
     "ru": "Data not valid"
+  },
+  "currency_not_match": {
+    "az": "Data not valid",
+    "en": "Currency does not match",
+    "ru": "Data not valid"
   }
 }
