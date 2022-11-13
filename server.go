@@ -6,6 +6,7 @@ import (
 	db "BankApp/db/sqlc"
 	_ "BankApp/docs"
 	"BankApp/middleware"
+	"BankApp/user"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -58,7 +59,9 @@ func NewServer() (*fiber.App, error) {
 	// repos & services
 	repository := db.NewRepository(connection)
 	accountService := account.GetNewAccountService(repository)
+	userService := user.GetNewUserService(repository)
 	account.Router(v1, accountService)
+	user.Router(v1, userService)
 
 	v1.Get("/swagger/*", swagger.HandlerDefault)
 	return app, nil

@@ -16,7 +16,7 @@ migrationnew:
 sqlc:
 	sqlc generate
 
-startapp:
+server:
 	go run server.go
 
 swagger:

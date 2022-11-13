@@ -5,6 +5,7 @@ import (
 	my_errors "BankApp/errors"
 	"context"
 	"github.com/gofiber/fiber/v2"
+	"github.com/lib/pq"
 )
 
 type AccountService interface {
@@ -30,8 +31,13 @@ func (as *AccountServiceImpl) CreateAccount(input CreateAccountInput) (*AccountO
 		Balance:  input.Balance,
 		Currency: input.Currency,
 	})
-	if err != nil {
-		return nil, my_errors.NewHttpError(fiber.StatusNotFound, my_errors.NewResponseByKey("not_found", "en"))
+	if pgErr, ok := err.(*pq.Error); ok {
+		switch pgErr.Code.Name() {
+		case "foreign_key_violation":
+			return nil, my_errors.NewHttpError(fiber.StatusNotFound, my_errors.NewResponseByKey("user_not_found", "en"))
+		case "unique_violation":
+			return nil, my_errors.NewHttpError(fiber.StatusNotFound, my_errors.NewResponseByKey("user_has_account", "en"))
+		}
 	}
 	return toAccountOutput(account), nil
 }

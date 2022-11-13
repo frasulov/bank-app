@@ -18,7 +18,7 @@ func TestGetAccountAPI200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	service := mockdb.NewMockService(ctrl)
+	service := mockdb.NewMockAccountService(ctrl)
 	service.EXPECT().
 		GetAccount(gomock.Eq(accountInstance.Id)).
 		Times(1).
@@ -38,7 +38,7 @@ func TestGetAccountAPI404(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	service := mockdb.NewMockService(ctrl)
+	service := mockdb.NewMockAccountService(ctrl)
 	service.EXPECT().
 		GetAccount(gomock.Eq(accountInstance.Id)).
 		Times(1).
@@ -56,7 +56,7 @@ func TestGetAccountAPI404(t *testing.T) {
 func TestGetAccountAPI404Query(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-	service := mockdb.NewMockService(ctrl)
+	service := mockdb.NewMockAccountService(ctrl)
 	controller := account.NewAccountController(service)
 	app := fiber.New()
 	app.Get("/accounts/:id", controller.GetAccount)

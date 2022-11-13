@@ -13,5 +13,15 @@
     "az": "Data not valid",
     "en": "Currency does not match",
     "ru": "Data not valid"
+  },
+  "user_not_found": {
+    "az": "There is no such user",
+    "en": "There is no such user",
+    "ru": "There is no such user"
+  },
+  "user_has_account": {
+    "az": "User has account with currency",
+    "en": "User has account with currency",
+    "ru": "User has account with currency"
   }
 }
