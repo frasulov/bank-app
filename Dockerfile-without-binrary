@@ -1,0 +1,7 @@
+FROM golang:1.18-alpine
+WORKDIR /app
+COPY . .
+RUN go build -o main-bank-app server.go
+
+EXPOSE 8001
+CMD [ "/app/main" ]
