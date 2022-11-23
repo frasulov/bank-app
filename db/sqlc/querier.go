@@ -6,6 +6,7 @@ package db
 
 import (
 	"context"
+	"encoding/json"
 )
 
 type Querier interface {
@@ -22,6 +23,7 @@ type Querier interface {
 	GetAccounts(ctx context.Context, arg GetAccountsParams) ([]Account, error)
 	GetEntries(ctx context.Context, arg GetEntriesParams) ([]Entry, error)
 	GetEntry(ctx context.Context, id int64) (Entry, error)
+	GetFullAccountInfo(ctx context.Context, id int64) (json.RawMessage, error)
 	GetTransfer(ctx context.Context, id int64) (Transfer, error)
 	GetTransfers(ctx context.Context, arg GetTransfersParams) ([]Transfer, error)
 	GetUser(ctx context.Context, username string) (User, error)

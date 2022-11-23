@@ -11,7 +11,7 @@ var ProfileConfiguration ProfileConfigurations
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	viper.AddConfigPath("./config")
+	viper.AddConfigPath("/Users/faganrasulov/Desktop/BankApp/config")
 	viper.SetConfigType("yml")
 	viper.SetConfigName("config-profile.yml")
 

@@ -50,6 +50,7 @@ func TestGetAccount(t *testing.T) {
 func TestGetAccounts(t *testing.T) {
 	account1 := createRandomAccount(t)
 	accounts, err := testQueries.GetAccounts(context.Background(), db.GetAccountsParams{
+		Owner:  account1.Owner,
 		Limit:  1,
 		Offset: 0,
 	})

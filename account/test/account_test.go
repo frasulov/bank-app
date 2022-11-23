@@ -2,16 +2,28 @@ package test
 
 import (
 	"BankApp/account"
+	"BankApp/config"
 	mockdb "BankApp/db/mock"
 	my_errors "BankApp/errors"
+	"BankApp/globals"
+	"BankApp/middleware"
 	"BankApp/util"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
+	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
+
+func addAuthorization(t *testing.T, request *http.Request, username string, duration time.Duration) {
+	token, err := globals.TokenMaker.CreateToken(username, duration)
+	require.NoError(t, err)
+	authorizationHeader := fmt.Sprintf("%s %s", config.Configuration.Token.AuthorizationTypeBearer, token)
+	request.Header.Set(config.Configuration.AuthorizationHeaderKey, authorizationHeader)
+}
 
 func TestGetAccountAPI200(t *testing.T) {
 	accountInstance := randomAccountOutput()
@@ -25,9 +37,11 @@ func TestGetAccountAPI200(t *testing.T) {
 		Return(accountInstance, nil)
 	controller := account.NewAccountController(service)
 	app := fiber.New()
-	app.Get("/accounts/:id", controller.GetAccount)
-
+	err := globals.Inject()
+	require.NoError(t, err)
+	app.Get("/accounts/:id", middleware.Protect, controller.GetAccount)
 	req := httptest.NewRequest("GET", fmt.Sprintf("/accounts/%v", accountInstance.Id), nil)
+	addAuthorization(t, req, accountInstance.Owner, time.Minute)
 	resp, err := app.Test(req)
 	require.NoError(t, err)
 	fmt.Println("resp: ", resp)

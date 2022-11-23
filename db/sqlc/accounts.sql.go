@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"encoding/json"
 )
 
 const addAccountBalance = `-- name: AddAccountBalance :one
@@ -103,17 +104,20 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, id int64) (Account, e
 }
 
 const getAccounts = `-- name: GetAccounts :many
-SELECT id, owner, balance, currency, created_at FROM accounts order by created_at desc
-limit $1 offset $2
+SELECT id, owner, balance, currency, created_at FROM accounts
+         where owner = $1
+         order by created_at desc
+limit $2 offset $3
 `
 
 type GetAccountsParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+	Owner  string `json:"owner"`
+	Limit  int32  `json:"limit"`
+	Offset int32  `json:"offset"`
 }
 
 func (q *Queries) GetAccounts(ctx context.Context, arg GetAccountsParams) ([]Account, error) {
-	rows, err := q.db.QueryContext(ctx, getAccounts, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, getAccounts, arg.Owner, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -139,6 +143,22 @@ func (q *Queries) GetAccounts(ctx context.Context, arg GetAccountsParams) ([]Acc
 		return nil, err
 	}
 	return items, nil
+}
+
+const getFullAccountInfo = `-- name: GetFullAccountInfo :one
+select jsonb_build_object('id', a.id, 'name', a.owner, 'balance', a.balance, 'currency', a.currency, 'transactions', coalesce(x.transactions, '[]'))
+from accounts a
+         left join lateral (
+    select jsonb_agg(jsonb_build_object('amount', t.amount, 'created_at', t.created_at)) as transactions
+    from transfers t where t.from_account_id = a.id
+        ) as x on true where a.id= $1
+`
+
+func (q *Queries) GetFullAccountInfo(ctx context.Context, id int64) (json.RawMessage, error) {
+	row := q.db.QueryRowContext(ctx, getFullAccountInfo, id)
+	var jsonb_build_object json.RawMessage
+	err := row.Scan(&jsonb_build_object)
+	return jsonb_build_object, err
 }
 
 const updateAccount = `-- name: UpdateAccount :one

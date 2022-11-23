@@ -5,6 +5,7 @@ import (
 	"BankApp/config"
 	db "BankApp/db/sqlc"
 	_ "BankApp/docs"
+	"BankApp/globals"
 	"BankApp/middleware"
 	"BankApp/user"
 	"github.com/goccy/go-json"
@@ -46,6 +47,10 @@ func NewServer() (*fiber.App, error) {
 	if err != nil {
 		return nil, err
 	}
+	err = globals.Inject()
+	if err != nil {
+		return nil, err
+	}
 	// make fiber faster
 	app := fiber.New(fiber.Config{
 		JSONEncoder: json.Marshal,
@@ -53,7 +58,7 @@ func NewServer() (*fiber.App, error) {
 	})
 	app.Use(logger.New())
 	app.Use(cors.New())
-	app.Use(middleware.Common())
+	app.Use(middleware.Common)
 	v1 := app.Group("/api/v1")
 
 	// repos & services

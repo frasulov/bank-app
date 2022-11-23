@@ -91,6 +91,48 @@ definitions:
       message:
         type: string
     type: object
+  user.CreateUserInput:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - full_name
+    - password
+    - username
+    type: object
+  user.LoginUserInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  user.LoginUserOutput:
+    properties:
+      access_token:
+        type: string
+      user:
+        $ref: '#/definitions/user.UserDto'
+    type: object
+  user.UserDto:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      username:
+        type: string
+    type: object
 host: localhost:8001
 info:
   contact:
@@ -190,6 +232,31 @@ paths:
       summary: Get a account by ID.
       tags:
       - Account
+  /login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/user.LoginUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.LoginUserOutput'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Response'
+      summary: Login a user.
+      tags:
+      - User
   /transfer:
     post:
       consumes:
@@ -215,6 +282,31 @@ paths:
       summary: Transfer money between 2 accounts
       tags:
       - Account
+  /users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/user.CreateUserInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/user.UserDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Response'
+      summary: Create a new User.
+      tags:
+      - User
 schemes:
 - http
 - https

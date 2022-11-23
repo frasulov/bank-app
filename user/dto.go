@@ -7,8 +7,18 @@ type CreateUserInput struct {
 	Password string `json:"password" validate:"required"`
 }
 
-type CreateUserOutput struct {
+type UserDto struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	FullName string `json:"full_name"`
+}
+
+type LoginUserInput struct {
+	Username string `json:"username" validate:"required,alphanum"`
+	Password string `json:"password" validate:"required"`
+}
+
+type LoginUserOutput struct {
+	AccessToken string   `json:"access_token"`
+	User        *UserDto `json:"user"`
 }

@@ -66,18 +66,18 @@ func (mr *MockAccountServiceMockRecorder) GetAccount(arg0 interface{}) *gomock.C
 }
 
 // ListAccounts mocks base method.
-func (m *MockAccountService) ListAccounts(arg0 *account.ListAccountParam) ([]*account.AccountOutput, error) {
+func (m *MockAccountService) ListAccounts(arg0 string, arg1 *account.ListAccountParam) ([]*account.AccountOutput, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListAccounts", arg0)
+	ret := m.ctrl.Call(m, "ListAccounts", arg0, arg1)
 	ret0, _ := ret[0].([]*account.AccountOutput)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListAccounts indicates an expected call of ListAccounts.
-func (mr *MockAccountServiceMockRecorder) ListAccounts(arg0 interface{}) *gomock.Call {
+func (mr *MockAccountServiceMockRecorder) ListAccounts(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccounts", reflect.TypeOf((*MockAccountService)(nil).ListAccounts), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAccounts", reflect.TypeOf((*MockAccountService)(nil).ListAccounts), arg0, arg1)
 }
 
 // TransferMoney mocks base method.

@@ -25,7 +25,7 @@ func NewUserController(service UserService) UserController {
 // @Accept json
 // @Produce json
 // @Param input body CreateUserInput  true "User"
-// @Success 201 {object} CreateUserOutput
+// @Success 201 {object} UserDto
 // @Failure 400 {object} errors.Response
 // @Router /users [post]
 func (ac UserController) CreateUser(ctx *fiber.Ctx) error {
@@ -42,4 +42,29 @@ func (ac UserController) CreateUser(ctx *fiber.Ctx) error {
 		return ctx.Status(err.(errors.HttpError).Code).JSON(err.(errors.HttpError).Response)
 	}
 	return ctx.Status(fiber.StatusCreated).JSON(user)
+}
+
+// LoginUser
+// @Summary Login a user.
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param input body LoginUserInput true "Login data"
+// @Success 200 {object} LoginUserOutput
+// @Failure 400 {object} errors.Response
+// @Router /login [post]
+func (ac UserController) LoginUser(ctx *fiber.Ctx) error {
+	var input LoginUserInput
+	if err := ctx.BodyParser(&input); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(errors.NewResponseByKey("data_not_valid", "en"))
+	}
+	err := ac.validator.Struct(input)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(errors.NewResponseByKey("data_not_valid", "en"))
+	}
+	response, err := ac.service.LoginUser(input)
+	if err != nil {
+		return ctx.Status(err.(errors.HttpError).Code).JSON(err.(errors.HttpError).Response)
+	}
+	return ctx.Status(fiber.StatusOK).JSON(response)
 }

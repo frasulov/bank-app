@@ -17,7 +17,7 @@ type SQLRepository struct {
 }
 
 func NewRepository(conn *sql.DB) Repository {
-	return SQLRepository{
+	return &SQLRepository{
 		db:      conn,
 		Queries: New(conn),
 	}
@@ -42,7 +42,7 @@ func (r *SQLRepository) execTx(ctx context.Context, fn func(*Queries) error) err
 type TransferTxParams struct {
 	FromAccountId int64 `json:"from_account_id"`
 	ToAccountId   int64 `json:"to_account_id"`
-	Amount        int64 `json:"ammount"`
+	Amount        int64 `json:"amount"`
 }
 
 type TransferTxResult struct {
@@ -53,7 +53,7 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
-func (r SQLRepository) TransferTx(ctx context.Context, args TransferTxParams) (TransferTxResult, error) {
+func (r *SQLRepository) TransferTx(ctx context.Context, args TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 	err := r.execTx(ctx, func(q *Queries) error {
 		var err error
