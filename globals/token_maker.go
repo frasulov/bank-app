@@ -14,5 +14,6 @@ func Inject() error {
 	if err != nil {
 		return fmt.Errorf("cannot create token maker: %v", err.Error())
 	}
+
 	return nil
 }

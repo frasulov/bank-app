@@ -1,14 +1,14 @@
 database:
   host: localhost
-  port: 5433
+  port: 5435
   dialect: postgres
-  user: postgres
-  dbname: postgres
-  password: postgres
+  user: root
+  dbname: bank
+  password: secret
   gormMaxIdleConn: 20
   gormMaxOpenConn: 300
   gormMaxConnLifetimeHour: 1
-  sslmode: disable
+  ssl_mode: disable
   schema: public.
 
 app:

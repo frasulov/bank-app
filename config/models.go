@@ -39,6 +39,6 @@ type Database struct {
 	GormMaxIdleConn         int
 	GormMaxOpenConn         int
 	GormMaxConnLifetimeHour int
-	SSLMode                 string
+	SSLMode                 string `mapstructure:"ssl_mode"`
 	Schema                  string
 }

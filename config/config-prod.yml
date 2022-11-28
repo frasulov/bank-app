@@ -1,16 +1,24 @@
 database:
-  host: localhost
-  port: 5432
+  host: bank_db
+  port: 5435
   dialect: postgres
-  user: postgres
-  dbname: im-db
-  password: password
+  user: root
+  dbname: bank
+  password: secret
   gormMaxIdleConn: 20
   gormMaxOpenConn: 300
   gormMaxConnLifetimeHour: 1
-  sslmode: disable
-  schema: im.
+  ssl_mode: disable
+  schema: public.
 
 app:
-  host: main-imd.technofusion.az
+  host: localhost
   port: 8080
+
+
+token:
+  symmetric_key: "12345678901234567890123456789012"
+  access_token_duration: 15m
+  authorization_header_key: "authorization"
+  authorization_type_bearer: "bearer"
+  authorization_payload_key: "authorization_payload"

@@ -10,6 +10,7 @@ import (
 	"database/sql"
 	"github.com/gofiber/fiber/v2"
 	"github.com/lib/pq"
+	"log"
 )
 
 type UserService interface {
@@ -52,6 +53,7 @@ func (us *UserServiceImpl) LoginUser(data LoginUserInput) (*LoginUserOutput, err
 		if err == sql.ErrNoRows {
 			return nil, my_errors.NewHttpError(fiber.StatusNotFound, my_errors.NewResponseByKey("not_found", "en"))
 		}
+		log.Printf("ERR while getting user: %s", err.Error())
 		return nil, my_errors.NewHttpError(fiber.StatusInternalServerError, my_errors.NewResponseByKey("system_error", "en"))
 	}
 
@@ -62,6 +64,7 @@ func (us *UserServiceImpl) LoginUser(data LoginUserInput) (*LoginUserOutput, err
 
 	accessToken, err := globals.TokenMaker.CreateToken(data.Username, config.Configuration.AccessTokenDuration)
 	if err != nil {
+		log.Printf("ERR while creating user: %s", err.Error())
 		return nil, my_errors.NewHttpError(fiber.StatusInternalServerError, my_errors.NewResponseByKey("system_error", "en"))
 	}
 

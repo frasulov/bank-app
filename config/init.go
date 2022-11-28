@@ -4,14 +4,23 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"log"
+	"path/filepath"
+	"runtime"
 )
 
 var Configuration Configurations
 var ProfileConfiguration ProfileConfigurations
+var ProjectPath string
+
+var (
+	_, b, _, _ = runtime.Caller(0)
+	basePath   = filepath.Dir(b)
+)
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	viper.AddConfigPath("/Users/faganrasulov/Desktop/BankApp/config")
+
+	viper.AddConfigPath(basePath)
 	viper.SetConfigType("yml")
 	viper.SetConfigName("config-profile.yml")
 

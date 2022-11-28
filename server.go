@@ -36,7 +36,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	err = app.Listen("localhost:8001")
+	err = app.Listen(":8001")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -51,6 +51,8 @@ func NewServer() (*fiber.App, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Println(config.Configuration.Database)
+
 	// make fiber faster
 	app := fiber.New(fiber.Config{
 		JSONEncoder: json.Marshal,

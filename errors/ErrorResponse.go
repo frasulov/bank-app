@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 )
 
 type Response struct {
@@ -48,8 +50,13 @@ func NewResponseByKey(key, language string) *Response {
 	}
 }
 
+var (
+	_, b, _, _ = runtime.Caller(0)
+	basePath   = filepath.Dir(b)
+)
+
 func readErrorFile() map[string]map[string]string {
-	byteValue, err := os.ReadFile("/Users/faganrasulov/Desktop/BankApp/errors/errorResponse.json")
+	byteValue, err := os.ReadFile(basePath + "/errorResponse.json")
 	if err != nil {
 		log.Fatal(err)
 	}
