@@ -1,5 +1,11 @@
+db_host := localhost
+db_port := 5432
+db_user := root
+db_password := secret
+db_name := bank
+
 migrationup:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5435/bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}?sslmode=disable" -verbose up
 
 migrationup1:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5435/bank?sslmode=disable" -verbose up 1
@@ -35,4 +41,4 @@ dockerrun:
 	docker run --name bank --network bank-net -p 8001:8001 bankapp:v1
 
 test:
-	go test -v -cover ./...
+	go test -v -cover) ./...
