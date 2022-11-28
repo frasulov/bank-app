@@ -12,7 +12,7 @@ import (
 // install github.com/lib/pq
 const (
 	dbDriver = "postgres"
-	dbSource = "postgresql://postgres:postgres@localhost:5433/bank-db?sslmode=disable"
+	dbSource = "postgresql://root:secret@localhost:5432/bank?sslmode=disable"
 )
 
 var testQueries *db.Queries
