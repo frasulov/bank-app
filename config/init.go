@@ -10,7 +10,6 @@ import (
 
 var Configuration Configurations
 var ProfileConfiguration ProfileConfigurations
-var ProjectPath string
 
 var (
 	_, b, _, _ = runtime.Caller(0)
@@ -45,6 +44,17 @@ func init() {
 		if err != nil {
 			log.Println(err.Error())
 		}
-
 	}
+
+	viper.SetConfigType("env")
+	viper.SetConfigName("app.env")
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf(fmt.Sprintf("Error reading config file: %v", err.Error()))
+	}
+	err = viper.Unmarshal(&Configuration.Database)
+	if err != nil {
+		log.Println(err.Error())
+	}
+
 }

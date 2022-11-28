@@ -1,6 +1,9 @@
 package config
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type ProfileConfigurations struct {
 	Profile Profile
@@ -30,15 +33,25 @@ type App struct {
 }
 
 type Database struct {
-	Host                    string
-	Port                    int
-	Dialect                 string
-	User                    string
-	DBName                  string
-	Password                string
-	GormMaxIdleConn         int
-	GormMaxOpenConn         int
-	GormMaxConnLifetimeHour int
-	SSLMode                 string `mapstructure:"ssl_mode"`
-	Schema                  string
+	Host                string `mapstructure:"DB_HOST"`
+	Port                int    `mapstructure:"DB_PORT"`
+	User                string `mapstructure:"DB_USER"`
+	DBName              string `mapstructure:"DB_NAME"`
+	Password            string `mapstructure:"DB_PASSWORD"`
+	MaxIdleConn         int    `mapstructure:"DB_MAX_IDLE_CONNECTION"`
+	MaxOpenConn         int    `mapstructure:"DB_MAX_OPEN_CONNECTION"`
+	MaxConnLifetimeHour int    `mapstructure:"DB_MAX_CONNECTION_LIFETIME"`
+	SSLMode             string `mapstructure:"DB_SSL_MODE"`
+	Schema              string `mapstructure:"DB_SCHEMA"`
+}
+
+func (dbConfig *Database) URL() string {
+	dbSource := fmt.Sprintf("postgresql://%v:%v@%v:%v/%v?sslmode=%v",
+		dbConfig.User,
+		dbConfig.Password,
+		dbConfig.Host,
+		dbConfig.Port,
+		dbConfig.DBName,
+		dbConfig.SSLMode)
+	return dbSource
 }

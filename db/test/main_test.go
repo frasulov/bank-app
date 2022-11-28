@@ -1,6 +1,7 @@
 package test
 
 import (
+	"BankApp/config"
 	db "BankApp/db/sqlc"
 	"database/sql"
 	_ "github.com/lib/pq"
@@ -12,7 +13,6 @@ import (
 // install github.com/lib/pq
 const (
 	dbDriver = "postgres"
-	dbSource = "postgresql://root:secret@localhost:5432/bank?sslmode=disable"
 )
 
 var testQueries *db.Queries
@@ -23,7 +23,7 @@ var repository db.Repository
 
 func TestMain(m *testing.M) {
 	var err error
-	testDB, err = sql.Open(dbDriver, dbSource)
+	testDB, err = sql.Open(dbDriver, config.Configuration.Database.URL())
 	if err != nil {
 		log.Fatal("cannot connect to DB")
 	}

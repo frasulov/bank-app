@@ -1,20 +1,6 @@
-database:
-  host: localhost
-  port: 5432
-  dialect: postgres
-  user: root
-  dbname: bank
-  password: secret
-  gormMaxIdleConn: 20
-  gormMaxOpenConn: 300
-  gormMaxConnLifetimeHour: 1
-  ssl_mode: disable
-  schema: public.
-
 app:
   host: localhost
-  port: 8080
-
+  port: 8001
 
 token:
   symmetric_key: "12345678901234567890123456789012"
