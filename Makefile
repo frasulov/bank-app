@@ -1,23 +1,25 @@
-db_host := localhost
-db_port := 5432
-db_user := root
-db_password := secret
-db_name := bank
+DB_HOST := localhost
+DB_PORT := 5435
+DB_USER := root
+DB_PASSWORD := secret
+DB_NAME := bank
+DB_SSL_MODE := disable
+DB_SOURCE := "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE}"
 
 migrationup:
-	migrate -path db/migration -database "postgresql://${db_user}:${db_password}@${db_host}:${db_port}/${db_name}?sslmode=disable" -verbose up
+	migrate -path db/migration -database "${DB_SOURCE}" -verbose up
 
 migrationup1:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5435/bank?sslmode=disable" -verbose up 1
+	migrate -path db/migration -database "${DB_SOURCE}" -verbose up 1
 
 migrationdown:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5435/bank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "${DB_SOURCE}" -verbose down
 
 migrationdown1:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5435/bank?sslmode=disable" -verbose down 1
+	migrate -path db/migration -database "${DB_SOURCE}" -verbose down 1
 
 migrationnew:
-	migrate create -ext sql -dir db/migration -seq add_users
+	migrate create -ext sql -dir db/migration -seq add_sessions
 
 sqlc:
 	sqlc generate

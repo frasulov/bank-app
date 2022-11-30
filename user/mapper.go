@@ -1,6 +1,9 @@
 package user
 
-import db "BankApp/db/sqlc"
+import (
+	db "BankApp/db/sqlc"
+	"github.com/google/uuid"
+)
 
 func toUserOutput(model db.User) *UserDto {
 	return &UserDto{
@@ -10,10 +13,12 @@ func toUserOutput(model db.User) *UserDto {
 	}
 }
 
-func toLoginResponseOutput(accessToken string, user db.User) *LoginUserOutput {
+func toLoginResponseOutput(accessToken, refreshToken string, sessionId uuid.UUID, user db.User) *LoginUserOutput {
 	return &LoginUserOutput{
-		AccessToken: accessToken,
-		User:        toUserOutput(user),
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		SessionId:    sessionId,
+		User:         toUserOutput(user),
 	}
 }
 
@@ -24,4 +29,5 @@ func toUserModel(model CreateUserInput) db.CreateUserParams {
 		Email:    model.Email,
 		Password: model.Password,
 	}
+
 }

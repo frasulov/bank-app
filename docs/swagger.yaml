@@ -121,8 +121,24 @@ definitions:
     properties:
       access_token:
         type: string
+      refresh_token:
+        type: string
+      session_id:
+        type: string
       user:
         $ref: '#/definitions/user.UserDto'
+    type: object
+  user.RefreshTokenInput:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  user.RefreshTokenOutput:
+    properties:
+      access_token:
+        type: string
     type: object
   user.UserDto:
     properties:
@@ -229,7 +245,7 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errors.Response'
-      summary: Get a account by ID.
+      summary: Get an account by ID.
       tags:
       - Account
   /login:
@@ -254,7 +270,36 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errors.Response'
-      summary: Login a user.
+      summary: Login user.
+      tags:
+      - User
+  /refresh-token:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh token
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/user.RefreshTokenInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.RefreshTokenOutput'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Response'
+      summary: Refresh a token
       tags:
       - User
   /transfer:

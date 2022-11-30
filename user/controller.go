@@ -37,7 +37,7 @@ func (ac UserController) CreateUser(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(errors.NewResponseByKey("data_not_valid", "en"))
 	}
-	user, err := ac.service.CreateUser(input)
+	user, err := ac.service.CreateUser(ctx.Context(), input)
 	if err != nil {
 		return ctx.Status(err.(errors.HttpError).Code).JSON(err.(errors.HttpError).Response)
 	}
@@ -45,7 +45,7 @@ func (ac UserController) CreateUser(ctx *fiber.Ctx) error {
 }
 
 // LoginUser
-// @Summary Login a user.
+// @Summary Login user.
 // @Tags User
 // @Accept json
 // @Produce json
@@ -62,7 +62,34 @@ func (ac UserController) LoginUser(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(errors.NewResponseByKey("data_not_valid", "en"))
 	}
-	response, err := ac.service.LoginUser(input)
+	response, err := ac.service.LoginUser(ctx.Context(), input)
+	if err != nil {
+		return ctx.Status(err.(errors.HttpError).Code).JSON(err.(errors.HttpError).Response)
+	}
+	return ctx.Status(fiber.StatusOK).JSON(response)
+}
+
+// RefreshToken
+// @Summary Refresh a token
+// @Tags User
+// @Accept json
+// @Produce json
+// @Param input body RefreshTokenInput true "Refresh token"
+// @Success 200 {object} RefreshTokenOutput
+// @Failure 400 {object} errors.Response
+// @Failure 500 {object} errors.Response
+// @Router /refresh-token [post]
+func (ac UserController) RefreshToken(ctx *fiber.Ctx) error {
+	var input RefreshTokenInput
+	if err := ctx.BodyParser(&input); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(errors.NewResponseByKey("data_not_valid", "en"))
+	}
+	err := ac.validator.Struct(input)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(errors.NewResponseByKey("data_not_valid", "en"))
+	}
+
+	response, err := ac.service.RenewToken(ctx.Context(), input)
 	if err != nil {
 		return ctx.Status(err.(errors.HttpError).Code).JSON(err.(errors.HttpError).Response)
 	}

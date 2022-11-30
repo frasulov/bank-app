@@ -22,6 +22,7 @@ type Configurations struct {
 type Token struct {
 	SymmetricKey            string        `mapstructure:"symmetric_key"`
 	AccessTokenDuration     time.Duration `mapstructure:"access_token_duration"`
+	RefreshTokenDuration    time.Duration `mapstructure:"refresh_token_duration"`
 	AuthorizationHeaderKey  string        `mapstructure:"authorization_header_key"`
 	AuthorizationTypeBearer string        `mapstructure:"authorization_type_bearer"`
 	AuthorizationPayloadKey string        `mapstructure:"authorization_payload_key"`

@@ -1,5 +1,7 @@
 package user
 
+import "github.com/google/uuid"
+
 type CreateUserInput struct {
 	Username string `json:"username" validate:"required,alphanum"`
 	Email    string `json:"email" validate:"required,email"`
@@ -19,6 +21,16 @@ type LoginUserInput struct {
 }
 
 type LoginUserOutput struct {
-	AccessToken string   `json:"access_token"`
-	User        *UserDto `json:"user"`
+	SessionId    uuid.UUID `json:"session_id"`
+	AccessToken  string    `json:"access_token"`
+	RefreshToken string    `json:"refresh_token"`
+	User         *UserDto  `json:"user"`
+}
+
+type RefreshTokenInput struct {
+	RefreshToken string `json:"refresh_token"validate:"required"`
+}
+
+type RefreshTokenOutput struct {
+	AccessToken string `json:"access_token"`
 }
